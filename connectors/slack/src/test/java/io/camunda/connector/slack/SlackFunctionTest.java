@@ -409,6 +409,11 @@ public class SlackFunctionTest extends BaseTest {
     // When / Then
     Throwable thrown = catchThrowable(() -> slackFunction.execute(context));
     assertThat(thrown).isInstanceOf(RuntimeException.class).hasMessageContaining("error string");
+    ArgumentCaptor<PinsAddRequest> captor = ArgumentCaptor.forClass(PinsAddRequest.class);
+    verify(methodsClient).pinsAdd(captor.capture());
+    PinsAddRequest request = captor.getValue();
+    assertThat(request.getChannel()).isEqualTo("C123ABC456");
+    assertThat(request.getTimestamp()).isEqualTo("1503435956.000247");
   }
 
   @ParameterizedTest
@@ -445,5 +450,11 @@ public class SlackFunctionTest extends BaseTest {
     // When / Then
     Throwable thrown = catchThrowable(() -> slackFunction.execute(context));
     assertThat(thrown).isInstanceOf(RuntimeException.class).hasMessageContaining("error string");
+
+    ArgumentCaptor<PinsRemoveRequest> captor = ArgumentCaptor.forClass(PinsRemoveRequest.class);
+    verify(methodsClient).pinsRemove(captor.capture());
+    PinsRemoveRequest request = captor.getValue();
+    assertThat(request.getChannel()).isEqualTo("C123ABC456");
+    assertThat(request.getTimestamp()).isEqualTo("1503435956.000247");
   }
 }
